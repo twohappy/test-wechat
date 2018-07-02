@@ -12,20 +12,29 @@ class WeChatController extends Controller {
    */
   public function serve()
   {
-    Log::info('request arrived.'); # 注意：Log 为 Laravel 组件，所以它记的日志去 Laravel 日志看，而不是 EasyWeChat 日志
     $officialAccount = \EasyWeChat::officialAccount();
 
-    $message = $officialAccount->server->getMessage();
+    Log::info('request arrived.'); # 注意：Log 为 Laravel 组件，所以它记的日志去 Laravel 日志看，而不是 EasyWeChat 日志
 
-    $id = $message['FromUserName'];
-    $Oid = $message['ToUserName'];
+    $message = $officialAccount->server->getMessage();
 
     if ($message['MsgType'] === 'event') {
       return null;
     }
+    $officialAccount->server->push(function ($message) {
+      return 'Message received!';
+    });
+    Log::info(json_encode($message));
+
+    return $officialAccount->server->serve();
+  }
+
+  public function notice()
+  {
+    $officialAccount = \EasyWeChat::officialAccount();
 
     $officialAccount->template_message->send([
-      'touser'      => $id,
+      'touser'      => 'gh_1ccb4d091daa',
       'template_id' => 'PKgrrNma6Z_6zcCGYde9d7DD6-fFBFGc9sIMChFWdvs',
       'url'         => 'https://easywechat.org',
       'data'        => [
@@ -37,8 +46,6 @@ class WeChatController extends Controller {
         'remark' => '今天就发一次',
       ],
     ]);
-
-    Log::info(json_encode($message));
 
     return $officialAccount->server->serve();
   }
