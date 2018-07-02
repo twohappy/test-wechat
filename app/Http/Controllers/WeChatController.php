@@ -35,7 +35,7 @@ class WeChatController extends Controller {
     $users = $officialAccount->user->list($nextOpenId = null);
     Log::info(json_encode($users));
     $officialAccount->template_message->send([
-      'touser'      => 'gh_1ccb4d091daa',
+      'touser'      => 'oaAhC1nJRvC3T2ZF_1NiJisJp_Vo',
       'template_id' => 'PKgrrNma6Z_6zcCGYde9d7DD6-fFBFGc9sIMChFWdvs',
       'url'         => 'https://easywechat.org',
       'data'        => [
