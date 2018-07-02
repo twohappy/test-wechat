@@ -32,7 +32,8 @@ class WeChatController extends Controller {
   public function notice()
   {
     $officialAccount = \EasyWeChat::officialAccount();
-
+    $users = $officialAccount->user->list($nextOpenId = null);
+    Log::info(json_encode($users));
     $officialAccount->template_message->send([
       'touser'      => 'gh_1ccb4d091daa',
       'template_id' => 'PKgrrNma6Z_6zcCGYde9d7DD6-fFBFGc9sIMChFWdvs',
