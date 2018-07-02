@@ -3,8 +3,7 @@
 use Illuminate\Support\Facades\Log;
 use EasyWeChat\Kernel\Messages;
 
-class WeChatController extends Controller
-{
+class WeChatController extends Controller {
 
   /**
    * 处理微信的请求消息
@@ -20,18 +19,23 @@ class WeChatController extends Controller
 
     $id = $message['FromUserName'];
     $Oid = $message['ToUserName'];
+
+    if ($message['MsgType'] === 'event') {
+      return null;
+    }
+
     $officialAccount->template_message->send([
-      'touser' => $id,
+      'touser'      => $id,
       'template_id' => 'PKgrrNma6Z_6zcCGYde9d7DD6-fFBFGc9sIMChFWdvs',
-      'url' => 'https://easywechat.org',
-      'data' => [
-        'first' => '你好',
-        'name' => '浦发银行',
+      'url'         => 'https://easywechat.org',
+      'data'        => [
+        'first'  => '你好',
+        'name'   => '浦发银行',
         'target' => '10',
         'latest' => '11.2',
-        'time' => '2018-07-02 12:00:00',
+        'time'   => '2018-07-02 12:00:00',
         'remark' => '今天就发一次',
-        ],
+      ],
     ]);
 
     Log::info(json_encode($message));
