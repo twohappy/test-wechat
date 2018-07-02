@@ -16,7 +16,12 @@ class WeChatController extends Controller
 
     $app = app('wechat.official_account');
     $app->server->push(function($message){
-      return "欢迎关注 overtrue！";
+      $toName = $message['ToUserName'];
+      $fromName = $message['FromUserName'];
+      $time = $message['CreateTime'];
+      $id = $message['MsgId'];
+      $str = "接收方{$toName},发送方{$fromName},时间{$time}，消息ID{$id}";
+      return $str;
     });
 
     return $app->server->serve();
