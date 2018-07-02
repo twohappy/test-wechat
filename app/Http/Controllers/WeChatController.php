@@ -21,7 +21,7 @@ class WeChatController extends Controller
       $time = $message['CreateTime'];
       $id = $message['MsgId'];
       $str = "接收方{$toName},发送方{$fromName},时间{$time}，消息ID{$id}";
-      return $str;
+      return $message;
     });
 
     return $app->server->serve();
