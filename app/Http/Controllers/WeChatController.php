@@ -20,6 +20,11 @@ class WeChatController extends Controller {
     Log::info(json_encode($message));
 
     if ($message['MsgType'] === 'event') {
+      if($message['Event'] === 'subscribe'){
+        // 用户关注公众号后直接拿到 open_id 和 union_id
+        $user = $officialAccount->user->get($message['FromUserName']);
+        Log::info($user);
+      }
       return null;
     }
     $officialAccount->server->push(function ($message) {
@@ -34,7 +39,7 @@ class WeChatController extends Controller {
 //    dd($users);
     Log::info(json_encode($users));
     $officialAccount->template_message->send([
-      'touser'      => 'oaAhC1ojJ34G7zMl-C1v3hPwqRZM',
+      'touser'      => 'oaAhC1vaFCNClSBqVPPsDCwQ82jU',
       'template_id' => 'jJX2LFHOPSqm8Zk7lDLNvS07FWnEEJ5EaJnm2OQEPj0',
       'url'         => 'https://baidu.com',
       'data'        => [
