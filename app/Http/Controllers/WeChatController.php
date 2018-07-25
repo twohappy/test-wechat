@@ -12,13 +12,19 @@ class WeChatController extends Controller {
    */
   public function serve()
   {
-    Log::info('request arrived.'); # 注意：Log 为 Laravel 组件，所以它记的日志去 Laravel 日志看，而不是 EasyWeChat 日志
-    $app = app('wechat.official_account');
-    $app->server->push(function($message){
-      return "欢迎关注 overtrue！";
-    });
+    $officialAccount = \EasyWeChat::officialAccount();
 
-    return $app->server->serve();
+    Log::info('request arrived.'); # 注意：Log 为 Laravel 组件，所以它记的日志去 Laravel 日志看，而不是 EasyWeChat 日志
+
+    $message = $officialAccount->server->getMessage();
+    Log::info(json_encode($message));
+
+    if ($message['MsgType'] === 'event') {
+      return null;
+    }
+    $officialAccount->server->push(function ($message) {
+      return 'Message received!';
+    });
   }
 
   public function notice()
@@ -28,18 +34,35 @@ class WeChatController extends Controller {
 //    dd($users);
     Log::info(json_encode($users));
     $officialAccount->template_message->send([
-      'touser'      => 'oaAhC1nJRvC3T2ZF_1NiJisJp_Vo',
-      'template_id' => 'PKgrrNma6Z_6zcCGYde9d7DD6-fFBFGc9sIMChFWdvs',
-      'url'         => 'https://easywechat.org',
+      'touser'      => 'oaAhC1ojJ34G7zMl-C1v3hPwqRZM',
+      'template_id' => 'jJX2LFHOPSqm8Zk7lDLNvS07FWnEEJ5EaJnm2OQEPj0',
+      'url'         => 'https://baidu.com',
       'data'        => [
-        'first'  => '你好',
-        'name'   => '浦发银行',
-        'target' => '10',
-        'latest' => '11.2',
-        'time'   => '2018-07-02 12:00:00',
-        'remark' => '今天就发一次',
+        'first'  => '吱吱',
+        'keyword1'  => '大佬安排的任务',
+        'keyword2'  => '主要内容是打酱油',
+        'keyword3'  => '其它的没了',
+        'remark'  => '没有用的一个备注。如有问题，自己解决。',
+//        'name'   => '浦发银行',
+//        'target' => '10',
+//        'latest' => '11.2',
+//        'time'   => '2018-07-02 12:00:00',
+//        'remark' => '今天就发一次',
       ],
     ]);
+
+    return $officialAccount->server->serve();
+  }
+
+  public function sendNotice()
+  {
+    $officialAccount = \EasyWeChat::officialAccount();
+    $users = $officialAccount->user->list($nextOpenId = null);
+//    dd($users);
+    Log::info(json_encode($users));
+    $officialAccount->server->push(function ($message) {
+    return "您好！欢迎关注我!";
+   });
 
     return $officialAccount->server->serve();
   }
